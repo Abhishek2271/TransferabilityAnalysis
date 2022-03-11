@@ -6,7 +6,7 @@ The source code in the repository is a Python API that is able to fulfil a compl
 3. Transferaing adversarial examples from the network where samples are created (source) to another network (target) network.
 
 The API is based on Tensropack [(Y. Wu et al., 2016)](https://github.com/tensorpack) for training. Tensorpack is a part of TensorFlow 1.13 [(Abadi et al., 2016)](https://www.tensorflow.org) API.  
-For quantization DoReFa-Net method [(Zhou et al. (2018)](https://arxiv.org/abs/1606.06160) is used
+For quantization DoReFa-Net method [(Zhou et al. 2018)](https://arxiv.org/abs/1606.06160) is used
 For adversarial attack generation ART [(Nicolae et al., 2019)](https://arxiv.org/abs/1807.01069 ) is used. 
 
 The API is fairly simple to use. 
