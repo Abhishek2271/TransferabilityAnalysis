@@ -14,8 +14,8 @@ A use case is already implemented with a YAML parser. To run this please follow 
 
 ## For training:
 In the config.yml file:
-1. Update the "task" --> "type" to "training". 
-Then in the "training-options" secion:
+1. Update the "task" --> "type" to "training".  
+Then in the "training-options" section:  
 2. Specify the dataset that the model is to be trained on in the "dataset" field
 3. Specify the model to be trained in the "model" field
 4. Specify the quantization bitwidth in the "precision" field.
