@@ -1,0 +1,7 @@
+model_checkpoint_path: "model-2340"
+all_model_checkpoint_paths: "model-390"
+all_model_checkpoint_paths: "model-780"
+all_model_checkpoint_paths: "model-1170"
+all_model_checkpoint_paths: "model-1560"
+all_model_checkpoint_paths: "model-1950"
+all_model_checkpoint_paths: "model-2340"

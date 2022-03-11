@@ -1,0 +1,61 @@
+#This file is not the part of the core application and was buit mainly to speedup the data collection process. 
+#And thus is not really in a proper format and also the corresponding reader is rough :(
+
+
+attack-options: 
+    #get source data. required because we need to run inference on this data with the target 
+    source-data: mnist   
+    #taget base model. required to create graph. all the models in the targets are quantized variants of this model
+    target-base-model: model_a
+    #Adversarial images created at source which should be used to attack the target model    
+    sources:      
+      #source images contain adv. images created from benign images that were all classified correctly by the source classifier
+      #provide the .npz file. (format:  image, label, index)
+      source-images_0: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-FP\mnist_conv_adv_pre-FP--run-0.npz
+      #source dataset from which the source_images were taken. This is required so that only correctly predicted images by target
+      #is used during adversarial attacks      
+
+      source-images_1: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-1,1,32\mnist_conv_adv_pre-1,1,32--run-0.npz
+     
+      source-images_2: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-2,2,32\mnist_conv_adv_pre-2,2,32--run-0.npz
+     
+      source-images_4: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-4,4,32\mnist_conv_adv_pre-4,4,32--run-0.npz
+      
+      source-images_8: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-8,8,32\mnist_conv_adv_pre-8,8,32--run-0.npz
+
+      source-images_12: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-12,12,32\mnist_conv_adv_pre-12,12,32--run-0.npz
+
+      source-images_16: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\mnist-16,16,32\mnist_conv_adv_pre-16,16,32--run-0.npz
+          
+    targets:
+      #location of the checkpoint containing target model parameters 
+      #saved checkpoint of the target model
+      target-model_0: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-FP\_Model_3283
+        #precision of target model       
+        bitwidth: #1,1,32
+
+      target-model_1: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-1132\_Model_4596
+        #precision of target model       
+        bitwidth: 1,1,32
+
+      target-model_2: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-2232\_Model_53
+        bitwidth: 2,2,32
+      
+      target-model_4: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-4432\_Model_1454
+        bitwidth: 4,4,32
+      
+      target-model_8: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-8832\_Model_1173
+        bitwidth: 8,8,32
+      
+      target-model_12: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-121232\_Model_1266
+        bitwidth: 12,12,32
+     
+      target-model_16: 
+        modeldata: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-161632\_mode_750
+        bitwidth: 16,16,32

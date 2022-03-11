@@ -1,0 +1,110 @@
+# This yaml file contains configuration for running experiments with the core application
+# The basic structure of the yml is:
+#           task:
+#             type: Train/ Inference/ Attack
+#           training-options:
+#             model: <Supported Model Name>
+#             dataset: MNIST/CIFAR10
+#             precision:              
+#               bitwidth: bitW, bitA, bitG (2,2,32)
+#           inference-options:
+#             load: <location-of-saved-model>
+#             base-model: <the model definition that the loaded model uses> 
+#             images: <perform inference on saved images>
+#             precision:      
+#               bitwidth: bitW, bitA, bitG (2,2,32)
+#           attack-options:
+#             load: <location-of-saved-model>
+#             base-model: <the model definition that the loaded model uses>
+#             algorithm: name of the algorithm to craft adversarial examples
+#             precision:
+#               bitwidth: bitW, bitA, bitG (2,2,32)
+
+
+
+task:
+  #Available modes: training/ inference/ attack
+  type: attack 
+
+training-options:
+  #Specify training option. Only relevant when the task type is "training"
+  #Model name: (supported) LeNet5, model_a,b,c (MNIST models)
+  #Model name: (supported) cifar_a, cifar_b, cifar_c (CIFAR models)
+  #Model name: (supported) resnet_3, resnet_5, resnet_7 (CIFAR models)
+  model: model_a
+  #dataset name: (supported) mnist, cifar10  
+  dataset: mnist
+  precision:
+  #precision to train the model on. Specify nothing to train a "Full precision model" or "bitW, bitA, bitG" for quantized model  
+    bitwidth: #8,8,32  
+
+inference-options:
+  #specify inference options. Only relevant when task type is "inference"
+  #load a saved model from disk. Currently only checkpoints are supported. 
+  #if this is a quantized model then the precision SHOULD match the loaded model precision
+  load-model: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-FP\_Model_3283
+
+  #Give name of the model to use as a base graph. 
+  #(supported) LeNet5, model_a,b,c (MNIST models)
+  #(supported) cifar_a, cifar_b, cifar_c (CIFAR models)
+  #(supported) resnet_3, resnet_5, resnet_7 (CIFAR models)
+  base-model: model_a
+  #Spefify the images to perform inference on.
+  #(supported): 
+  #   1.  Mnist (will do inference on entire test data of mnist)
+  #   2.  Cifar10 (will do inference on entire cifar test data set)
+  #   3.  npz files with image and label pair. In this case give file location.
+  #   4.  npz files with image, label, adversarial examples, data index. In this case give file location
+  images: mnist
+  #precision to train the model on. Specify nothing to train a "Full precision model" or "bitW, bitA, bitG" for quantized model
+  precision:
+    bitwidth: #1,1,32
+
+attack-options:
+  #specify attack options. Only relevant when task type is "attack"
+  #load a saved model from disk. Currently only checkpoints are supported. 
+  #the app will use this model to create adversarial attacks
+  
+  #either create attack using supported algorithm or perform transfer attack
+  attack-mode:  create #transfer/create 
+  
+  #enter options if you want to create attacks.
+  create-attack:    
+    #give a checkpoint of a model on which the adversarial images should be trained
+    load-model: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-FP\_Model_3283
+    #Give name of the model to use as a base graph. 
+    #(supported) LeNet5, model_a,b,c (MNIST models)
+    #Model name: (supported) cifar_a, cifar_b, cifar_c (CIFAR models)
+    #Model name: (supported) resnet_3, resnet_5, resnet_7 (CIFAR models)
+    base-model: model_a
+    #Give the name of the algorithm to craft adversarial attacks on
+    #(supported:)
+    #    1. FGSM
+    #    2. JSMA
+    #    3. BA
+    #    4. UAP
+    algorithm: BA
+
+    dataset: mnist
+    #precision to train the model on. Specify nothing to train a "Full precision model" or "bitW, bitA, bitG" for quantized model
+    precision:
+      bitwidth: #1,1,32
+      
+  transfer-attack:
+    #provide source image in .npz format that contains adversarial images as well as corresponding labels and index
+    #configuration regarding the source of adversarial images
+    source:
+      #source images contain adv. images created from benign images that were all classified correctly by the source classifier
+      #provide the .npz file. (format:  image, label, index)
+      source-images: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\trained_images\BA\NEW CODE\MNIST\MODEL_A_REGULARIZED\100_ITT\mnist-FP\mnist_conv_adv_pre-FP--run-1__filtered.npz
+      #source dataset from which the source_images were taken. This is required so that only correctly predicted images by target
+      #is used during adversarial attacks
+      source-data: mnist
+    #location of the checkpoint containing target model parameters 
+    target:
+      target-model: C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\LENET_ABC\LENET5_A\MNIST-FP\_Model_9380
+      #taget base model. required to create graph
+      target-base-model: lenet5
+      #precision of target model
+      precision: 
+        bitwidth: #1,1,32
