@@ -5,11 +5,19 @@ The source code in the repository is a Python API that is able to fulfil a compl
 2. Creating adversarial examples on these networks.
 3. Transferaing adversarial examples from the network where samples are created (source) to another network (target) network.
 
+The API is based on Tensropack (Y. Wu et al., 2016) for training. Tensorpack is a part of TensorFlow 1.13 (Abadi et al., 2016) API.  
+For adversarial attack generation ART (Nicolae et al., 2019) is used. 
+
 The API is fairly simple to use. 
 A use case is already implemented with a YAML parser. To run this please follow the following steps
 
 ## For training:
-
+In the config.yml file:
+1. Update the "task" --> "type" to "training"
+2. Specify the dataset that the model is to be trained on in the "dataset" field
+3. Specify the model to be trained in the "model" field
+4. Specify the quantization bitwidth in the "precision" field.
+5. To initate the training run "run_exp.py" file.
 
 
 
