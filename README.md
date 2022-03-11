@@ -14,12 +14,20 @@ A use case is already implemented with a YAML parser. To run this please follow 
 
 ## For training:
 In the config.yml file:
-1. Update the "task" --> "type" to "training"
+1. Update the "task" --> "type" to "training". 
+Then in the "training-options" secion:
 2. Specify the dataset that the model is to be trained on in the "dataset" field
 3. Specify the model to be trained in the "model" field
 4. Specify the quantization bitwidth in the "precision" field.
 5. To initate the training run "run_exp.py" file.
 
+## For creating adversarial examples:
+In the config.yml file:
+1. Update the "task" --> "type" to "create"
+2. Specify the dataset that the model is to be trained on in the "dataset" field
+3. Specify the model to be trained in the "model" field
+4. Specify the quantization bitwidth in the "precision" field.
+5. To initate the training run "run_exp.py" file.
 
 
 # References
