@@ -23,11 +23,31 @@ Then in the "training-options" section:
 
 ## For creating adversarial examples:
 In the config.yml file:
-1. Update the "task" --> "type" to "create"
-2. Specify the dataset that the model is to be trained on in the "dataset" field
-3. Specify the model to be trained in the "model" field
-4. Specify the quantization bitwidth in the "precision" field.
-5. To initate the training run "run_exp.py" file.
+1. Update the "task" --> "type" to "create"  
+Then in the "attack-options" section:  
+2. Set the "attack-mode" to "create".  
+In the "create-attack" section:  
+3. Load a saved model on which the attack is to be created in the "load-model" field. This can be a Tensorflow checkpoint.
+4. Specify the base-model, that is the type of the model to load in the "base-model" field.
+5. Specify the attack algorithm to use in the "algorithm" field.
+6. Specify the dataset to created the adversarial examples in the "dataset" field. Data points will be sampled from this dataset.
+7. Specify the quantization bitwidth of the loaded model in the "precision" field.
+8. To initate the attack creation run "run_exp.py" file.
+
+## For adversarial transfer:
+In the config.yml file:
+1. Update the "task" --> "type" to "transfer"  
+Then in the "attack-options" section:  
+2. Set the "attack-mode" to "transfer".  
+In the "transfer-attack" section:  
+Specify source properties in the "Source" section:  
+3. Add the location of the .npz file containing adversarial examples in the "source-images" field.
+4. Specify the dataset used to create the adversarial examples in the "dataset" field.
+Specify target properties in the "Target" section:  
+7. Load a saved model on which the attack is to be transferred (target model) in the "target-model" field. This can be a Tensorflow checkpoint.
+8. Specify the base-model, that is the type of the target mode "base-model" field.
+9. Specify the quantization bitwidth of the loaded model in the "precision" field.
+10. To initate the attack creation run "run_exp.py" file.
 
 
 # References
