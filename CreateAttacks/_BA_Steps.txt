@@ -1,0 +1,47 @@
+Generate
+--> Check if targetted or untargetted attack
+--> When untargetted get the prediction of all input images
+--> Create array x_adv that stores adversarial images that will be created for each images in x
+For each image
+	--> Perturb (self._perturb)
+		--> Get initial image (self._init_sample)
+			--> From unifor random distribution sample each pixel to create a random image which can be used as initial image
+			--> Get predicted class, if predicted class is not equal to the predicted class of the origial image, use this image.
+			--> Return the initial image and its label as (initial_sample)
+		-->	Attack (self.attack) perform boundary attack
+			--> Input: initial_sample_image, original_input_image, predicted_label_of_x, initial_sample_label, Initial_delta, Initial_epsilon
+			# Trust region method to adjust delta
+			--FOR defined max_iterations:
+				--> For a defined number of steps (default: 25): num_trial
+					-->Compute orthogonal perturbation using delta. 
+					--> For a defined number of sample_size (default: 20): Get Orthogonal Perturbation:
+						--> Compute orthogonal perturbation (gaussian iid in paper, in code random.randn() which also uses gaussian distribution)
+							--> Get the unit vector of the generated perturbation
+							--> Compute then the magnitude of perturbation as:
+								perturbation = perturbation * delta * d(original_image, current_image)
+									so, this basically means we get first the orthogonal direction then get the vector with magnitude based on delta.
+							--> Then project this perturbation to a sphere around the image. But this perturbation should not decrease the distance between the orignal image and the current perturbed image, this distance should only be decreased by epsilon later.		
+							-->Return perturbation
+						--> Add this perturbation to the current_image (x_adv)
+						--> Clip the perturbed image to [0,1]
+						--> Add these perturbed images to potential_adversarial_image[] array
+					--> For all these 20 images in potential_adversarial_image[], get the prediction
+					--> If greater than 50 percent of the prediction is adversarial then increase delta by defined amount
+					--> If less than 20 percent of the predicted values are in adversarial region then decrease delta.
+					--> Choose all images from potential_adversarial_image[] which were adversarial and then put them to another array: x_advs[]
+					
+			
+				# Begin Trust region method to adjust epsilon
+				--> For a defined number of steps (default: 25): num_trial
+					--> Get the perturbation by substracting original image with each element in x_advs computed earlier. So in total 20 images at maximum.
+					--> take a further step epsilon by multiplying perturbance with epsilon
+						perturbance = perturbance * epsilon
+					--> Add this perturbance to x_advs (previouly perturbed image)
+					--> Make again a list of potential_adversarial_image[]
+					--> Predict each adversarially perturbed images
+					--> if(less than 20% of the images are adversarial) then decrease epsilon by defined amount
+					--> if(more than 50% of the images are adversarial) increase epsilon by defined amount
+					--> if(epsilon >0) get the best adv image (out of 20 at max) this is decided by finding l2 distance between original image and adversarially perturbed image.
+					
+				# so eps and delta are adjusted for defined number of iterations
+					

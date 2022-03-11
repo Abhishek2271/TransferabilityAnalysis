@@ -1,0 +1,478 @@
+from tensorpack.utils import logger
+from six import with_metaclass
+import tensorflow as tf
+import matplotlib.pyplot as plt 
+import numpy as np
+import save_restore_images
+import visualize_data
+from tensorpack import *
+#if i add this here it will call the base.py of the tensorpack installation location: C:\Python37\lib\site-packages\tensorpack\predict
+from tensorpack.predict.base import *
+#Get custom Mnist data extraction (default tensorflow has an addition dimention that can cause problems during inference)
+from DataSets.mnist import GetMnist
+#TODO: Extend this to also do inference on selected images which users can input
+import os
+
+def infer_model(predictorConfig, dataset=None):
+
+    """
+    Display top 10 predictions without true labels
+    args: 
+        prediction config
+        dataset: dataset here is a set of images i.e a numpy array of images only (eg for mnist dataset is of shape (10000, 28,28))
+
+    """
+
+    #output labels of the MNIST classifier
+    predictor = OfflinePredictor(predictorConfig)
+    words = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+
+    if(dataset is None):
+        print("Please provide dataset to perform inference from.")
+        return
+
+    for i in range(10):
+        img = (dataset[i])[np.newaxis, :, :]
+        #print(img.shape)
+        output_adv = predictor(img)[0]
+        prob_org= output_adv[0]
+        #format the output
+        ret2 = prob_org.argsort()[-10:][::-1]
+
+        names = [words[i] for i in ret2]
+        #print(f + ":")
+        print(list(zip(names, prob_org[ret2])))  
+
+
+
+def infer_model(predictorConfig, output_labels, dataset=None, get_adv_accuracy= False):
+    """
+    Perform evaluation on the model.
+
+    args:
+    ---------
+    predictorConfig : Predictor configuration, required to create a predictor object
+
+    output_labels : set of output_labels the machine classifies data to
+
+    dataset : an iterable object containg [image, label] yields. Number of yields is equal to the number of images/labels in dataset
+            for eg: check Mnist class
+            In case of adversarial attacks where the data set contains adversarial images, this will yield [benign_image, label, adv_image]
+
+    get_adv_accuracy: Set this bool true if you want to find adversarial accuracy as well. To find adversarial accuracy
+                        the dataset should contain adversarial images data as well.
+              
+    """
+
+    
+    #output labels of the MNIST classifier
+    predictor = OfflinePredictor(predictorConfig)
+
+    if(dataset is None):
+        print("Please provide dataset to perform inference from.")
+        return
+
+    """ When finding adversarial accuracy we have to only get adversarial images whose benign counte-part produce correct classification
+     For this:
+        1. Run normal inference without considering adversarial images (get_adv_accuracy=False)
+        2. Get accuracy, while computing accuracy the function ALWAYS returns clean and false classification data.
+        3. When dataset has adversarial image component in it the clean and false data (npz files) will also contain corresponding adversarial images
+        4. Run inference again with only the adversarial image with the clean data to get adversarial accuracy
+
+    """
+    
+    if(get_adv_accuracy==True):                
+        print("Finding only examples that give correct classification.......")
+        acc_t1, err_t1, saved_correct_images, saved_false_images = compute_model_accuracy(predictor, output_labels, dataset, False)
+        print("Computing adversarial accuracy...")
+        adv_acc_t1, adv_err_t1, saved_correct_images, saved_false_images = compute_model_accuracy(predictor, output_labels, saved_correct_images, True)
+        logger.info("The overall accuracy of the model: {}, error: {} ".format(acc_t1, err_t1))
+        logger.info("The adversarial accuracy of the model: {}, error: {} ".format(adv_acc_t1, adv_err_t1))
+        return acc_t1, err_t1, adv_acc_t1, adv_err_t1, saved_correct_images
+    else:
+        print("Computing accuracy of the network...")
+        acc_t1, err_t1, saved_correct_images, saved_false_images = compute_model_accuracy(predictor, output_labels, dataset, False)
+        logger.info("The overall accuracy of the model: {}, error: {} ".format(acc_t1, err_t1))
+    #show_top_predictions(predictor, output_labels, dataset)
+        return acc_t1, err_t1, 0, 0, saved_correct_images
+
+def compute_model_adversarial_accuracy(predictor, output_labels, dataset):
+    
+    """
+    compute the adversarial accuracy of the model. This means accuracy of the model against adversarial images created from the
+    benign images that caused correct classification on the model.
+    In other words, adversarial accuracy should always be computed against images that are correctly classified by the network
+    
+    args:
+    -------
+    
+        Predcitor: predictor object
+        
+        output_labels: List of output labes the network classifies data to
+        
+        dataset: an iterable object containg [image, label] yields
+    """
+    
+    #number of correct pred
+    cpi_i = np.empty([0,28,28]) #create a empty numpy array to hold all the correctly predicted images
+    cpi_l = np.empty([0]) #create a empty numpy array to hold the corresponding labels of correctly predicted images
+    correct_labels = [] 
+    wrong_labels = []
+    wpi_i = np.empty([0,28,28]) #create a empty numpy array to hold all the correctly predicted images
+    wpi_l = np.empty([0]) #create a empty numpy array to hold the corresponding labels of correctly predicted images
+
+    adv_samples =  np.empty([0,28,28]) #  List of adv samples whose original image was correcly classified by the network
+    adv_samples_w =  np.empty([0,28,28]) #  List of adv samples whose original image was incorrectly classified by the network
+   
+    correct_org = 0
+    correct_adv = 0
+    wrong_org = 0
+    wrong_adv = 0
+    #current image index
+    data_element = 0
+    sz = len(dataset)    
+    print("Finding images that are classified correctly on the network...")
+    with get_tqdm(total=sz, disable=(sz == 0)) as pbar:
+        for img_label in dataset:          
+            img = (img_label[0])[np.newaxis, :, :]
+            adv_image = (img_label[1])[np.newaxis, :, :]
+            correct_label = img_label[2]      #correct label is a scalar value as provided by dataset iterator  
+            #print(img.shape)
+            output_org = predictor(img)[0]
+            prob_org= output_org[0]            
+            #arrage probabilites by high to low and load their index/position in ret
+            ret_org = prob_org.argsort()[-10:][::-1]            
+            if(ret_org[0] == correct_label):
+                correct_org = correct_org + 1
+                #create a numpy array of original images that were classified correclty by the classifier
+                cpi_i = np.append(cpi_i, img, axis=0)
+                #print(correct_label)
+                list.append(correct_labels, correct_label)
+                #create a nimpy array of all the adv images whose counter-part were correctly predicted
+                adv_samples = np.append(adv_samples, adv_image, axis=0)
+                #print("Correctly predicted: ", cpi_i.shape)
+                #print("corresponding adversarial samples", adv_samples.shape)
+                #print("correctly predicted images labels", correct_labels)
+            else:
+                wrong_org = wrong_org + 1
+                #print(ret_org)
+                names = [output_labels[i] for i in ret_org]
+                #create a numpy array of original images that were not classified incorreclty by the classifier                
+                wpi_i = np.append(wpi_i, img, axis=0)
+                list.append(wrong_labels, correct_label)
+                #create a nimpy array of all the adv images whose counter-part were incorrectly predicted
+                #print(correct_label)
+                adv_samples_w = np.append(adv_samples_w, adv_image, axis=0)
+                #print("wrongly predicted: ", wpi_i.shape)
+                #print("wrongly predicted images labels", wrong_labels)
+
+
+            pbar.update()
+        
+        print("correctly predicted images labels", len(correct_labels))
+        print("wrongly predicted images labels", len(wrong_labels))
+
+        data_element = data_element + 1
+        visualize_data.plot_images(wpi_i)
+        
+        #visualize_data.plot_images(adv_samples)
+
+    sz = len(adv_samples)    
+    print("Finding adversarial accuracy of the network...")
+    #index = 0
+    with get_tqdm(total=sz, disable=(sz == 0)) as pbar:
+        for index in range(len(adv_samples)):          
+            img = (adv_samples[index])[np.newaxis, :, :]
+            correct_label = correct_labels[index]      #correct label is a scalar value as provided by dataset iterator     
+            #print(img.shape)
+            output_org = predictor(img)[0]
+            prob_org= output_org[0]            
+            #arrage probabilites by high to low and load their index/position in ret
+            ret_org = prob_org.argsort()[-10:][::-1]            
+            if(ret_org[0] == correct_label):
+                correct_adv = correct_adv + 1
+                #print("actual label:", correct_label)
+                #print("predicted", ret_org)
+                #visualize_data.plot_images(img)
+                #create a numpy array of original images that were classified correclty by the classifier
+                #cpi_i = np.append(cpi_i, img, axis=0)
+                #print(correct_label)
+                #list.append(correct_labels, correct_label)
+                #create a nimpy array of all the adv images whose counter-part were correctly predicted
+                #adv_samples = np.append(adv_samples, adv_image, axis=0)
+                #print("Correctly predicted: ", cpi_i.shape)
+                #print("corresponding adversarial samples", adv_samples.shape)
+                #print("correctly predicted images labels", correct_labels)
+            else:
+                wrong_adv = wrong_adv + 1
+                #print(ret_org)
+                #names = [output_labels[i] for i in ret_org]
+                #create a numpy array of original images that were not classified incorreclty by the classifier                
+                #wpi_i = np.append(wpi_i, img, axis=0)
+                #list.append(wrong_labels, correct_label)
+                #create a nimpy array of all the adv images whose counter-part were incorrectly predicted
+                #print(correct_label)
+                #adv_samples_w = np.append(adv_samples_w, adv_image, axis=0)
+                #print("wrongly predicted: ", wpi_i.shape)
+                #print("wrongly predicted images labels", wrong_labels)
+
+
+            pbar.update()
+
+    
+    accuracy_t1 = (correct_org/len(dataset))*100    #top 1 accuracy for overall clean samples
+    error_t1 = (wrong_org/len(dataset))*100         #top 1 error for all clean samples
+
+    adv_accuracy_t1 = (correct_adv/len(adv_samples))*100    #top 1 accuracy for overall clean samples
+    adv_error_t1 = (wrong_adv/len(adv_samples))*100         #top 1 error for all clean samples
+
+    print("adv accuracy: ", adv_accuracy_t1)    
+    print("adv error: ", adv_error_t1)
+    return accuracy_t1, error_t1
+
+def compute_model_accuracy(predictor, output_labels, dataset, get_adv_accuracy=False):
+    """
+    Compute model accuracy in a naive way. Just run the dataset through predictor and get the accuracy of the model.
+    This is how keras does evaluation (model.eval())..
+    May be there is a way to run this in a batch.
+
+    This function will:
+        1. Compute accuracy when get_adv_accuracy=False
+        2. Compute adversarial accuracy when get_adv_accuracy=True
+
+    args:
+    -------
+    
+        Predcitor: predictor object
+        
+        output_labels: List of output labes the network classifies data to
+        
+        dataset: an iterable object containg [image, label] yields
+
+        get_adv_accuracy: true only when finding adversarial accuracy. The dataset in this case should only contain images that
+                            were classified correctly by the classifier
+    """
+    cpi_i = np.empty([0,28,28]) # create a empty numpy array to hold all the correctly predicted images
+    correct_labels = []         # List containing all the correct labels (later change to numpy while saving to file)
+
+    wpi_i = np.empty([0,28,28]) #create a empty numpy array to hold all the correctly predicted images    
+    wrong_labels = []           # List containing all the incorrect labels (later change to numpy while saving to file)
+    
+    # get adversarial examples corresponding to correct and incorrect inferences
+    adv_samples =  np.empty([0,28,28]) #  List of adv samples whose original image was correcly classified by the network
+    adv_samples_w =  np.empty([0,28,28]) #  List of adv samples whose original image was incorrectly classified by the network
+    
+    image_index_correctly_predicted = [] #image index of data point that was correctly predited
+    image_index_incorrectly_predicted = [] #image index of data point that was incorrectly predited
+
+    correct = 0                 # number of correct predictions
+    wrong = 0                   # number of wrong predictions
+    #current image index
+    data_element = 0    
+    #when computing sadversarial accuracy (after getting all samples classified correctly) no need to savve the adv_component separately
+    save_adv_component = False
+    sz = len(dataset)
+    with get_tqdm(total=sz, disable=(sz == 0)) as pbar:
+        for img_label in dataset: 
+            #when getting adversarial accuracy get the adversarial image. 
+            if(get_adv_accuracy): 
+                img = (img_label[3])[np.newaxis, :, :]
+            else:
+                img = (img_label[0])[np.newaxis, :, :]
+            correct_label = img_label[1]   
+            # If the data set also returns aversarial images then get numpy array of adv images as well to save in npz file. 
+            # But when finding adversarial accuracy "img" object itself will be adv image so no need to save adv image separately in disc
+            if(len(img_label) > 3 and get_adv_accuracy==False):
+                 save_adv_component = True
+                 adv_image = (img_label[3])[np.newaxis, :, :]
+            #print(img.shape)
+            output = predictor(img)[0]
+            prob= output[0]
+            #arrage probabilites by high to low and load their index/position in ret
+            ret = prob.argsort()[-10:][::-1]
+            if(ret[0] == correct_label):
+                correct = correct + 1
+                #print("Correct Label:", correct_label)
+                #print(ret)
+                #create a numpy array of original images that were classified correclty by the classifier
+                cpi_i = np.append(cpi_i, img, axis=0)
+                #keep list of all corresponding labels of correctly predicted images                
+                list.append(correct_labels, correct_label)
+                #if the prediction on benign image is correct then use the adversarial image
+                if(save_adv_component):
+                    #create a nimpy array of all the adv images whose counter-part were correctly predicted                   
+                    adv_samples = np.append(adv_samples, adv_image, axis=0)   
+                #if there is no image index, add one
+                if(len(img_label) == 2):           
+                    image_index_correctly_predicted.append(data_element)
+                else:
+                    image_index_correctly_predicted.append(img_label[2])
+                #print("current image number in dataset :", data_element)
+            else:
+                wrong = wrong + 1
+                #print("correct label:", correct_label)
+                #print ("prediction:")
+                #print(ret)
+                names = [output_labels[i] for i in ret]
+                #print(list(zip(names, prob_org[ret])))
+                #print("data element: ", data_element)
+
+                #create a numpy array of original images that were not classified incorreclty by the classifier                
+                wpi_i = np.append(wpi_i, img, axis=0)
+                list.append(wrong_labels, correct_label)
+                if(save_adv_component):
+                    adv_samples_w = np.append(adv_samples_w, adv_image, axis=0)
+
+                #if there is no image index, add one. there is no image index means that there are only image, label in the dataset
+                #for all other cases where the application itself creates adversarial examples, there is always index in it
+                if(len(img_label) == 2):           
+                    image_index_incorrectly_predicted.append(data_element)
+                else:
+                    image_index_incorrectly_predicted.append(img_label[2])
+
+            pbar.update()
+            #which element of array gave wrong result. This is helpful for debugging    
+            data_element = data_element + 1
+    accuracy_t1 = (correct/len(dataset))*100
+    error_t1 = (wrong/len(dataset))*100
+    #save all correctly and incorrectly predicted images separately    
+    saved_correct_pred, saved_wrong_pred = save_files_to_disc(save_adv_component, cpi_i, correct_labels, wpi_i, wrong_labels, adv_samples, adv_samples_w, image_index_correctly_predicted, image_index_incorrectly_predicted)
+    return accuracy_t1, error_t1, saved_correct_pred, saved_wrong_pred
+
+def save_files_to_disc(save_adversarial_image, cpi_i, correct_labels, wpi_i, wrong_labels, adv_samples, adv_samples_w, image_index_correctly_predicted, image_index_incorrectly_predicted):    
+    """
+    For each inference two files are created on the disc:
+
+        1. mnist_correct_images.npz: contains all the images that were classified correctly by the classifier along with their corresponding labels 
+        
+        2. mnist_incorrect_images.npz: contains all the images that were classified incorrectly by the classifier along with their corresponding labels 
+            .npz file format will be [benign_images, labels]
+
+            If the dataset being inferred contains adversarial image component to it then the two files will also have an adversarial component to it
+                in that case the files will be saved as:
+                mnist_correct_adv_images.npz 
+                mnist_incorrect_adv_images.npz
+                .npz files in this case will have adv. component to them: [benign_images, labels, adversarial_examples]
+
+    When finding adversarial accuracy, inference will be done two times:
+
+        1. Find all bening images that cause correct classification and save it in the file_names as:
+                mnist_correct_adv_images.npz  and mnist_incorrect_adv_images.npz .
+
+        2. Use the mnist_correct_adv_images.npz file (after saving, object returned as save_correct_pred) and again do inference
+            but this time find the adversarial accuracy by ONLY considering the adversarial example.
+            then save the adversarial samples that were classified correctly and incorrectly separately as :
+                mnist_correct_images.npz  and mnist_incorrect_images.npz 
+
+            NOTE: While finding adversarial accuracy the "img" variable IS the adversarial image so when finding adversarial accuracy,
+            adversarial image will not have any benign counterpart so there will only be two components  
+
+        Thus, since inference is done twice, adversarial accuracy calculation produces in total 4 files:
+
+            1. mnist_correct_adv_images.npz: as described above
+
+            2. mnist_incorrect_adv_images.npz: as described above
+
+            3. mnist_correct_images.npz: Adversarial images that were classified correctly and that contributed in the adversarial accuracy
+                                        save file format will be: [benign_images, labels]
+            
+            4  mnist_incorrect_images.npz: Adversarial images that were classified incorrectly and that contributed in the adversarial accuracy
+                                        save file format will be: [benign_images, labels]
+    """
+
+    savedir = logger.get_logger_dir() 
+    print(savedir)
+    #If there is no adversarial component, adversarial image on the array no need to save it
+    if(save_adversarial_image == False): 
+        save_correct_pred = save_restore_images.save_or_load_adversarial_image__npz(
+            "save", 
+            os.path.join(savedir, "mnist_correct_images.npz"), 
+            benign_image= cpi_i, 
+            labels=np.array(correct_labels), 
+            image_index= image_index_correctly_predicted)        
+        logger.info("Total adversarial images classified correctly by the network : {} ".format(cpi_i.shape))
+        save_false_pred = save_restore_images.save_or_load_adversarial_image__npz(
+            "save", 
+            os.path.join(savedir, "mnist_incorrect_images.npz"), 
+            benign_image= wpi_i, 
+            labels=np.array(wrong_labels), 
+            image_index= image_index_incorrectly_predicted)       
+        logger.info("Total adversarial images classified incorrectly by the network : {} ".format(wpi_i.shape))
+    #If there is adversarial component, adversarial image need to be saved like: benign_image, label and adversarial_image in a .npz file
+    else:
+        #When finding adversarial accuracy, these files will contain map of correctly classified images, labels and their adversarial image counterpart        
+        save_correct_pred = save_restore_images.save_or_load_adversarial_image__npz(
+            "save", 
+            os.path.join(savedir, "mnist_correct_adv_images.npz"), 
+            benign_image= cpi_i, 
+            labels=np.array(correct_labels), 
+            image_index= image_index_correctly_predicted, 
+            adversarial_image=adv_samples)        
+        logger.info("Total benign images that were correctly classified by the network : {} ".format(cpi_i.shape))        
+        save_false_pred = save_restore_images.save_or_load_adversarial_image__npz(
+            "save",
+            os.path.join(savedir, "mnist_incorrect_adv_images.npz"), 
+            benign_image= wpi_i, 
+            labels=np.array(wrong_labels), 
+            image_index= image_index_incorrectly_predicted, 
+            adversarial_image=adv_samples_w)        
+        logger.info("Total benign images that were incorrectly classified by the network : {} ".format(wpi_i.shape))
+        logger.info("Total adversarial images condidered for classification = Total benign images correctly classfied by the network : {}".format(cpi_i.shape))
+    return save_correct_pred, save_false_pred
+
+def show_top_predictions(predictor, output_labels, dataset):
+    """
+    This is a very baisc function meant just for debugging. It shows top 10 predictions from the model.
+    
+    To get any batch of predictions this should be modified   
+    """
+    start = 0
+    end = 10
+    for img_label in dataset:              
+        img = (img_label[0])[np.newaxis, :, :]
+        correct_label = img_label[1]
+        print("correct label:", correct_label)
+        #print(img.shape)
+        output_adv = predictor(img)[0]
+        prob_org= output_adv[0]
+        #arrage probabilites by high to low and load their index/position in ret
+        ret = prob_org.argsort()[-10:][::-1]
+        names = [output_labels[i] for i in ret]
+        #print(f + ":")
+        #make predicted output_labels with the corresponding probability
+        print(list(zip(names, prob_org[ret])))
+        start = start +1
+        if(start==end):
+            break
+
+
+def show_one_predictions(image, correct_label, predictor, output_labels): 
+    """
+    Give one image, along with correct label
+    Get corresponding prediction.
+    This is meant for debugging purposes.
+    
+    args:
+    -------
+        image: input image in numpy format
+        
+        correct_label: correct label of the image
+        
+        predictor: predictor object
+        
+        output_labels: set of output_labels the machine classifies data to
+    """
+             
+    img = (image)[np.newaxis, :, :]
+    print("correct label:", correct_label)
+    #print(img.shape)
+    output_adv = predictor(img)[0]
+    prob_org= output_adv[0]
+    #arrage probabilites by high to low and load their index/position in ret
+    ret = prob_org.argsort()[-10:][::-1]
+    names = [output_labels[i] for i in ret]
+    #print(f + ":")
+    #make predicted output_labels with the corresponding probability
+    print("Predictions:")
+    print(list(zip(names, prob_org[ret])))
+    visualize_data.plot_image(image)
