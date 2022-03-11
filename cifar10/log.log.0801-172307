@@ -1,3 +1,0 @@
-[32m[0801 17:14:00 @logger.py:92][0m Argv: .\cifar-convnet.py --gpu 0
-[32m[0801 17:14:00 @fs.py:101][0m [5m[31mWRN[0m Env var $TENSORPACK_DATASET not set, using C:\Users\mku\tensorpack_data for datasets.
-[32m[0801 17:15:53 @fs.py:73][0m Succesfully downloaded cifar-10-python.tar.gz. 170498071 bytes.
