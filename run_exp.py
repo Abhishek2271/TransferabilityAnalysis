@@ -9,7 +9,7 @@ import Inference
 import CreateAttacks
 import yaml
 
-yml_location = r"C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\config.yaml"
+yml_location = r".\config.yaml"
 
 if __name__ == '__main__':     
     with open(yml_location, 'r') as stream:
