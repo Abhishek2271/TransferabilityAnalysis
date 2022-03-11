@@ -28,7 +28,9 @@ Wu, Y. et al. (2016). Tensorpack. https://github.com/tensorpack.
 #### Tensorpack models are available at:  
 https://github.com/tensorpack/tensorpack/tree/master/examples
 
-#### Adversarial Examples are created using Adversarial Robustness Toolbox (ART) v. 1.5.1. Official paper: https://arxiv.org/abs/1807.01069
+#### Adversarial Examples are created using Adversarial Robustness Toolbox (ART) v. 1.5.1. Official paper: https://arxiv.org/abs/1807.01069  
+Cited as:  
+Nicolae, M.-I., Sinn, M., Tran, M. N., Buesser, B., Rawat, A., Wistuba, M., Zantedeschi, V., Baracaldo, N., Chen, B., Ludwig, H., Molloy, I. M., & Edwards, B. (2019). Adversarial robustness toolbox v1.0.0. arXiv:1807.01069
 
 ART is one of the popular APIs for adversaral examples generation and supports a large number of attacks. It is open-source with large number of very well explained examples. Please check their repository at:
 https://github.com/Trusted-AI/adversarial-robustness-toolbox
