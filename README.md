@@ -10,7 +10,7 @@ Quantization is based on DoReFa-Net method as proposed in the paper: https://arx
 Cited as:  
 Zhou, S., Wu, Y., Ni, Z., Zhou, X., Wen, H., & Zou, Y. (2018). DoReFa-net: Training low bitwidth convolutional neural networks with low bitwidth gradients. arXiv:1606.06160 [cs].
 
-#### For quantization source available from authors is used. This is available at:
+#### For quantization, source available from authors is used. This is available at:
 https://github.com/tensorpack/tensorpack/tree/master/examples/DoReFa-Net
 
 Quantization and the networks used is based on the examples provided on the Tensorpack repository:   
