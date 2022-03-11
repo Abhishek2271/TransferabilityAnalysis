@@ -1,0 +1,56 @@
+[32m[1006 11:21:31 @logger.py:92][0m Argv: run_exp.py
+[32m[1006 11:21:31 @registry.py:90][0m 'conv0': [?, 28, 28, 1] --> [?, 28, 28, 16]
+[32m[1006 11:21:31 @registry.py:90][0m 'pool0': [?, 28, 28, 16] --> [?, 14, 14, 16]
+[32m[1006 11:21:31 @model_a_q.py:87][0m Quantizing activations to 12 bits pool0/output:0
+[32m[1006 11:21:31 @model_a_q.py:78][0m Quantizing weights to 12 bits conv1/W
+[32m[1006 11:21:31 @registry.py:90][0m 'conv1': [?, 14, 14, 16] --> [?, 14, 14, 16]
+[32m[1006 11:21:31 @model_a_q.py:87][0m Quantizing activations to 12 bits conv1/output:0
+[32m[1006 11:21:31 @model_a_q.py:78][0m Quantizing weights to 12 bits conv2/W
+[32m[1006 11:21:31 @registry.py:90][0m 'conv2': [?, 14, 14, 16] --> [?, 14, 14, 16]
+[32m[1006 11:21:31 @registry.py:90][0m 'pool1': [?, 14, 14, 16] --> [?, 7, 7, 16]
+[32m[1006 11:21:31 @model_a_q.py:87][0m Quantizing activations to 12 bits pool1/output:0
+[32m[1006 11:21:31 @model_a_q.py:78][0m Quantizing weights to 12 bits conv3/W
+[32m[1006 11:21:31 @registry.py:90][0m 'conv3': [?, 7, 7, 16] --> [?, 7, 7, 16]
+[32m[1006 11:21:31 @model_a_q.py:87][0m Quantizing activations to 12 bits conv3/output:0
+[32m[1006 11:21:31 @model_a_q.py:78][0m Quantizing weights to 12 bits fc0/W
+[32m[1006 11:21:31 @registry.py:90][0m 'fc0': [?, 7, 7, 16] --> [?, 512]
+[32m[1006 11:21:31 @registry.py:90][0m 'linear': [?, 512] --> [?, 10]
+[32m[1006 11:21:31 @collection.py:146][0m New collections created in tower : logits of size 1
+[32m[1006 11:21:31 @sessinit.py:87][0m [5m[31mWRN[0m The following variables are in the checkpoint, but not found in the graph: beta1_power, beta2_power, global_step
+[32m[1006 11:21:34 @sessinit.py:114][0m Restoring checkpoint from C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-121232\_Model_1266 ...
+[32m[1006 11:21:37 @inference_core.py:532][0m Total  benign images  classified correctly by the network : (9909, 28, 28) 
+[32m[1006 11:21:37 @inference_core.py:539][0m Total  benign images  classified incorrectly by the network : (91, 28, 28) 
+[32m[1006 11:21:37 @inference_core.py:112][0m The overall accuracy of the model: 0.9909, error: 0.0091 
+[32m[1006 11:21:37 @model_a_q.py:87][0m Quantizing activations to 12 bits pool0/output:0
+[32m[1006 11:21:37 @model_a_q.py:78][0m Quantizing weights to 12 bits conv1/W
+[32m[1006 11:21:37 @model_a_q.py:87][0m Quantizing activations to 12 bits conv1/output:0
+[32m[1006 11:21:37 @model_a_q.py:78][0m Quantizing weights to 12 bits conv2/W
+[32m[1006 11:21:37 @model_a_q.py:87][0m Quantizing activations to 12 bits pool1/output:0
+[32m[1006 11:21:37 @model_a_q.py:78][0m Quantizing weights to 12 bits conv3/W
+[32m[1006 11:21:37 @model_a_q.py:87][0m Quantizing activations to 12 bits conv3/output:0
+[32m[1006 11:21:37 @model_a_q.py:78][0m Quantizing weights to 12 bits fc0/W
+[32m[1006 11:21:37 @collection.py:146][0m New collections created in tower : logits of size 1
+[32m[1006 11:21:38 @sessinit.py:87][0m [5m[31mWRN[0m The following variables are in the checkpoint, but not found in the graph: beta1_power, beta2_power, global_step
+[32m[1006 11:21:38 @sessinit.py:114][0m Restoring checkpoint from C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-121232\_Model_1266 ...
+[32m[1006 11:21:47 @model_a_q.py:87][0m Quantizing activations to 12 bits pool0/output:0
+[32m[1006 11:21:47 @model_a_q.py:78][0m Quantizing weights to 12 bits conv1/W
+[32m[1006 11:21:47 @model_a_q.py:87][0m Quantizing activations to 12 bits conv1/output:0
+[32m[1006 11:21:47 @model_a_q.py:78][0m Quantizing weights to 12 bits conv2/W
+[32m[1006 11:21:47 @model_a_q.py:87][0m Quantizing activations to 12 bits pool1/output:0
+[32m[1006 11:21:47 @model_a_q.py:78][0m Quantizing weights to 12 bits conv3/W
+[32m[1006 11:21:47 @model_a_q.py:87][0m Quantizing activations to 12 bits conv3/output:0
+[32m[1006 11:21:47 @model_a_q.py:78][0m Quantizing weights to 12 bits fc0/W
+[32m[1006 11:21:47 @collection.py:146][0m New collections created in tower : logits of size 1
+[32m[1006 11:21:47 @sessinit.py:87][0m [5m[31mWRN[0m The following variables are in the checkpoint, but not found in the graph: beta1_power, beta2_power, global_step
+[32m[1006 11:21:47 @sessinit.py:114][0m Restoring checkpoint from C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-121232\_Model_1266 ...
+[32m[1006 11:21:55 @model_a_q.py:87][0m Quantizing activations to 12 bits pool0/output:0
+[32m[1006 11:21:56 @model_a_q.py:78][0m Quantizing weights to 12 bits conv1/W
+[32m[1006 11:21:56 @model_a_q.py:87][0m Quantizing activations to 12 bits conv1/output:0
+[32m[1006 11:21:56 @model_a_q.py:78][0m Quantizing weights to 12 bits conv2/W
+[32m[1006 11:21:56 @model_a_q.py:87][0m Quantizing activations to 12 bits pool1/output:0
+[32m[1006 11:21:56 @model_a_q.py:78][0m Quantizing weights to 12 bits conv3/W
+[32m[1006 11:21:56 @model_a_q.py:87][0m Quantizing activations to 12 bits conv3/output:0
+[32m[1006 11:21:56 @model_a_q.py:78][0m Quantizing weights to 12 bits fc0/W
+[32m[1006 11:21:56 @collection.py:146][0m New collections created in tower : logits of size 1
+[32m[1006 11:21:56 @sessinit.py:87][0m [5m[31mWRN[0m The following variables are in the checkpoint, but not found in the graph: beta1_power, beta2_power, global_step
+[32m[1006 11:21:56 @sessinit.py:114][0m Restoring checkpoint from C:\Users\sab\Downloads\AI Testing\Source\Dorefanet\tensorpack\FullPrecisionModels\logs\train_log\MODEL_A_B_C\MODEL_A_REGULARIZED\mnist-121232\_Model_1266 ...
