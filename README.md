@@ -9,10 +9,7 @@ The API is based on Tensropack [(Y. Wu et al., 2016)](https://github.com/tensorp
 For quantization DoReFa-Net method [(Zhou et al., 2018)](https://arxiv.org/abs/1606.06160) is used
 For adversarial attack generation ART [(Nicolae et al., 2019)](https://arxiv.org/abs/1807.01069 ) is used. 
 
-The API is fairly simple to use. 
-A use case is already implemented with a YAML parser. To run this please follow the following steps
-
-For more details on how to use the api please follow the [wiki](https://github.com/Abhishek2271/TransferabilityAnalysis/wiki) section.
+The API is fairly simple to use. Details on how to use the api is in the [wiki](https://github.com/Abhishek2271/TransferabilityAnalysis/wiki) section.
 
 # References
 ## Quantization is based on DoReFa-Net method as proposed in the paper: https://arxiv.org/abs/1606.06160  
