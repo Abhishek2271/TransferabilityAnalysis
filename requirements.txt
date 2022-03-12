@@ -1,0 +1,12 @@
+adversarial_robustness_toolbox==1.5.1
+ipython==8.1.1
+matplotlib==3.3.4
+numpy==1.18.5
+opencv_python==4.5.2.54
+pandas==1.1.5
+PyYAML==6.0
+six==1.16.0
+tensorflow==2.8.0
+tensorpack==0.11
+tqdm==4.55.2
+Tensorflow_gpu==1.14.0
