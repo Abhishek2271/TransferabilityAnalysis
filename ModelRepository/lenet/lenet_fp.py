@@ -2,6 +2,11 @@ import tensorflow as tf
 
 from tensorpack import *
 
+'''
+A simple lenet architecture. Implemented from paper: http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf
+'''
+
+
 class Model(ModelDesc):
 
     '''
