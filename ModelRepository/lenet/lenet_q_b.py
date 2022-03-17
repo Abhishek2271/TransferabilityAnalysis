@@ -4,6 +4,10 @@ from tensorpack.tfutils.varreplace import remap_variables
 
 from dorefa import get_dorefa
 
+'''
+A simple lenet architecture. Implemented from paper: http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf
+The quantization layers are added as per the DoReFa-Net method
+'''
 
 BITW = 2 # Bitwidth of weight
 BITA = 2 # Bitwidth of activations
