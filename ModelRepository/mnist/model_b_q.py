@@ -4,10 +4,16 @@ from tensorpack import *
 from tensorpack.tfutils.varreplace import remap_variables
 
 from dorefa import get_dorefa
+'''
+A simple convolutional net to train MNIST handwriting recognition. 
+Source is a reimplementation of: https://github.com/tensorpack/tensorpack/blob/master/examples/basics/mnist-convnet.py
+The difference here is that the model now includes quantization layers that quantizes weights and activations during training.
+'''
 
 BITW = 2 # Bitwidth of weight
 BITA = 2 # Bitwidth of activations
 BITG = 32 #Bitwidth of gradients
+
 
 
 """
