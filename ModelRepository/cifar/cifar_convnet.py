@@ -11,6 +11,12 @@ from tensorpack.tfutils.summary import *
 from tensorpack.utils.gpu import get_num_gpu
 
 """
+THIS IS THE REIMPLEMENTAITON OF CODE FROM:
+https://github.com/tensorpack/tensorpack/blob/master/examples/basics/cifar-convnet.py
+
+
+COMMENTS FROM AUTHORS:
+
 A small convnet model for Cifar10.
 
 Cifar10 trained on 1 GPU:
