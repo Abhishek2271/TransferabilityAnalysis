@@ -4,6 +4,12 @@ import pandas as pd
 from matplotlib import colors
 from IPython.display import display
 
+# Pandas used for plotting transferability matrix. 
+# Pandas: © Copyright 2008-2022, the pandas development team.
+# For more information pls visit:https://pandas.pydata.org/pandas-docs/stable/user_guide/style.html
+# MathPlot lib used for plotting images.
+# MathPlot: © Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2021 The Matplotlib development team.
+# For more insformation pls visit https://matplotlib.org/stable/api/index
 
 def plot_image(data):
     #fig = plt.figure(figsize=(15, 7))
