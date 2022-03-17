@@ -20,7 +20,24 @@ BITA = 2 # Bitwidth of activations
 BITG = 32 #Bitwidth of gradients
 
 '''
-https://github.com/tensorpack/tensorpack/pull/69 DOREFA IMPLEMENTATION
+NOTE: 
+THIS IS NOT AN ORIGIAL WORK FROM ME.
+
+THIS IS THE EXACT IMPLEMENTATION OF RESNET IMPLEMENTED BY AUTHORS OF TENSORPACK. THE ORIGINAL CODE AT.
+https://github.com/tensorpack/tensorpack/blob/master/examples/ResNet/cifar10-resnet.py
+
+
+THE DATA FED TO THE NETWORK IS CHANGED AS TO ACCOMODATE THE OBJECTIVE AND CONSISTENCY WITH OTHER MODELS BEING COMPARED
+IN THE THESIS
+
+
+The DoReFa-Net implementation is from: https://github.com/tensorpack/tensorpack/pull/69
+But this method does not quite work for 2-bit or more quantization, added an additional BN layer on second conv layer as a quick-fix. 
+This does not seem to hamper the working but decreases training time significantly
+
+COMMENT FROM AUTHORS:
+
+
 '''
 """
 CIFAR10 ResNet example. Reproduce the 2-GPU settings in:
