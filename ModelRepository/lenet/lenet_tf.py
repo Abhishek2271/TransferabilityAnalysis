@@ -1,6 +1,14 @@
 import tensorflow as tf
 from tensorpack import *
 
+'''
+A simple lenet architecture. Implemented from paper: http://yann.lecun.com/exdb/publis/pdf/lecun-01a.pdf
+This type of layer definition without using the Tensorpack layer definition causes problems when adding quantization layers.
+calling activation and weight function from between is very slow. This is however is know issue with Tensorflow and is fixed in later versions.
+
+'''
+
+
 Mnist_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\MNIST\Data"
 
 '''
