@@ -2,6 +2,11 @@
 # File: dorefa.py
 # Author: Yuxin Wu
 
+#The DoReFa-Net method to quantize method. The comments make it clear how it works. Paper: https://arxiv.org/abs/1606.06160
+#This is the implementation code from Tensorpack with gradient quantization removed. But the weight and activation quantization are implemented
+#as is; original source can be found at: https://github.com/tensorpack/tensorpack/blob/master/examples/DoReFa-Net/dorefa.py
+
+
 import tensorflow as tf
 import sys
 
