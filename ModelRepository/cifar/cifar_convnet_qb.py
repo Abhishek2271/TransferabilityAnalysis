@@ -13,6 +13,13 @@ from tensorpack.tfutils.varreplace import remap_variables
 from dorefa import get_dorefa
 
 """
+THIS IS THE REIMPLEMENTAITON OF CODE FROM:
+https://github.com/tensorpack/tensorpack/blob/master/examples/basics/cifar-convnet.py
+With addition of quantization layers.
+The problem here is  that for higher bitwidth quantization (> 2-bit) the network takes too long to train.
+To fix this added a BN layer in the final conv layer which seems to fix the issue withtout any other repercussions
+
+
 A small convnet model for Cifar10.
 
 This is a quantized version of the CIFAR model described in cifar_covnet_b.py (base cifar model)
