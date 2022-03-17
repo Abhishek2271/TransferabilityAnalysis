@@ -2,6 +2,13 @@ import tensorflow as tf
 
 from tensorpack import *
 
+'''
+A simple convolutional net to train MNIST handwriting recognition. 
+Source is a reimplementation of: https://github.com/tensorpack/tensorpack/blob/master/examples/basics/mnist-convnet.py
+The difference here is that the channel number is increased to 64 (from 32).
+'''
+
+
 
 """
 Define model capapcity (number of parameters a model has) for this model
