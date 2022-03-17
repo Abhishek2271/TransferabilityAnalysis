@@ -5,7 +5,7 @@ from tensorpack import *
 '''
 A simple convolutional net to train MNIST handwriting recognition. 
 Source is a reimplementation of: https://github.com/tensorpack/tensorpack/blob/master/examples/basics/mnist-convnet.py
-
+The difference is that the channel number is reduced to 16. This does not seem to affect model performance.
 '''
 
 
