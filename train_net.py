@@ -1,5 +1,6 @@
 import os
 
+
 from tensorpack import *
 #if i call this, this will call the updated version of the file in my PC but without it tensorpack import * will call the defaule version somehow
 #from tensorpack.predict.base import OfflinePredictor
@@ -28,6 +29,9 @@ def get_config_mnist(_model, data_train, data_test):
         3. Number of epochs to train
 
         4. The model to use
+     
+    AutoResumeTrainConfig() is also used by Tensorpack to enable resuming training from previously saved checkpoint.
+    For more information pls follow the guide on Tensorpack: https://tensorpack.readthedocs.io/en/latest/modules/train.html#tensorpack.train.AutoResumeTrainConfig
     
     """
     return AutoResumeTrainConfig(
@@ -79,6 +83,8 @@ def get_config_mnist(_model, data_train, data_test):
 def get_config_cifar(_model, data_train, data_test):
 
     """
+    Training configuration is as per the example provided in Tensorpack repo example for training CIFAR data (not specifically cifar10).
+    The model is available at: https://github.com/tensorpack/tensorpack/blob/master/examples/basics/cifar-convnet.py
 
     Get training configuration for CIFAR-10. The training configuraion basically includes:
 
@@ -126,6 +132,9 @@ def get_config_cifar(_model, data_train, data_test):
 def get_config_cifar_resnet(_model, data_train, data_test):
     """
 
+    Training configuration is as per the example provided in Tensorpack repo example for training ResNet on CIFAR data (not specifically cifar10).
+    The model is available at: https://github.com/tensorpack/tensorpack/blob/master/examples/ResNet/cifar10-resnet.py
+    
     Get training configuration for CIFAR-10. The training configuraion basically includes:
 
         1. How many checkpoints to save 
