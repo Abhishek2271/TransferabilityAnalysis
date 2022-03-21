@@ -3,7 +3,7 @@
 The source code in the repository is a Python API that is able to fulfil a complete workflow of:
 1. Traning full-precision and quantized neural networks.
 2. Creating adversarial examples on these networks.
-3. Transferaing adversarial examples from the network where samples are created (source) to another network (target) network.
+3. Transfering adversarial examples from the network where samples are created (source) to another network (target) network.
 
 The API is based on Tensropack [(Y. Wu et al., 2016)](https://github.com/tensorpack) for training. Tensorpack is training framework which a part of TensorFlow 1.13 [(Abadi et al., 2016)](https://www.tensorflow.org) API.  
 For quantization DoReFa-Net method [(Zhou et al., 2018)](https://arxiv.org/abs/1606.06160) is used
