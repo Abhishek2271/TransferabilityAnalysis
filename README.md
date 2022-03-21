@@ -30,5 +30,5 @@ https://github.com/tensorpack/tensorpack/tree/master/examples
 Cited as:  
 Nicolae, M.-I., Sinn, M., Tran, M. N., Buesser, B., Rawat, A., Wistuba, M., Zantedeschi, V., Baracaldo, N., Chen, B., Ludwig, H., Molloy, I. M., & Edwards, B. (2019). Adversarial robustness toolbox v1.0.0. arXiv:1807.01069
 
-ART is one of the popular APIs for adversaral examples generation and supports a large number of attacks. It is open-source with large number of very well explained examples. Please check their repository at:
+ART is one of the popular APIs for adversaral examples generation and supports a large number of attacks. It is open-source with large number of very well explained examples. Please check out their repository at:
 https://github.com/Trusted-AI/adversarial-robustness-toolbox
