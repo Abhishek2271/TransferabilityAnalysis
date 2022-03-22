@@ -38,22 +38,6 @@ def plot_images(data):
         #ax.imshow(data[i].reshape((28,28)),cmap=plt.cm.gray_r, interpolation='nearest')
     plt.show()
 
-def plotTable(data):   
-    def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
-        rng = M - m
-        norm = colors.Normalize(m - (rng * low),
-                                M + (rng * high))
-        normed = norm(s.values)
-        c = [colors.rgb2hex(x) for x in plt.cm.get_cmap(cmap)(normed)]
-        return ['background-color: %s' % color for color in c]
-
-    data.style.apply(background_gradient,
-                cmap='PuBu',
-                m=data.min().min(),
-                M=data.max().max(),
-                low=0,
-                high=0.2)
-
 def plot_data_points(data_frame):
     df = pd.DataFrame(data_frame)
     pd.set_option("display.precision", 3)
@@ -104,8 +88,7 @@ def plot_data_points_with_average_stylized(data_frame):
     pd.set_option("display.precision", 3)
     df.columns= ["FP", "1" ,"2", "4", "8", "12", "16", "Average"]
     df.index = ["FP", "1", "2", "4", "8", "12", "16"]
-    #visualize_data.plotTable(df)
-    # generate some example data
+    
     def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
         rng = M - m
         norm = colors.Normalize(m - (rng * low),
@@ -123,51 +106,6 @@ def plot_data_points_with_average_stylized(data_frame):
     styles = [
         dict(selector="th", props=th_props)
         ]
-
-    display(df.style.apply(background_gradient,
-                cmap='PuBu',
-                m=df.min().min(),
-                M=df.max().max(),
-                low=0,
-                high=0.2).set_table_styles(styles))
-
-
-def plot_data_points_with_modelname(data_frame):
-    df = pd.DataFrame(data_frame)
-    pd.set_option("display.precision", 3)    
-    df.style.set_caption("This is Analytics Vidhya Blog")    
-    columns= ["Float", "1" ,"2", "4", "8", "12", "16", "Average"]
-    columns= list(zip(['HEADER1'] * 8, columns)) 
-    df.columns =  pd.MultiIndex.from_tuples(columns)
-    indexx = ["Float", "1", "2", "4", "8", "12", "16"]
-    indexx= list(zip(['HEADER2'] * 8, indexx)) 
-    df.index =  pd.MultiIndex.from_tuples(indexx)
-    #visualize_data.plotTable(df)
-    # generate some example data
-    def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
-        rng = M - m
-        norm = colors.Normalize(m - (rng * low),
-                                M + (rng * high))
-        normed = norm(s.values)
-        c = [colors.rgb2hex(x) for x in plt.cm.get_cmap(cmap)(normed)]
-        return ['background-color: %s' % color for color in c]   
-
-    td_props = [
-                ('font-weight', 'bold'),
-                ('background-color', '#ffffff')
-
-
-                ]
-    th_props = [
-                ('font-weight', 'bold'),
-                ('background-color', '#f7f7f9')
-                ]
-    # Set table styles
-    styles = [
-        dict(selector="th", props=th_props),  
-        dict(selector="HEADER2", props=td_props)    
-        ]
-    df.style.format({"HEADER2": lambda x: "±{:.2f}".format(abs(x))})
 
     display(df.style.apply(background_gradient,
                 cmap='PuBu',
