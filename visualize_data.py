@@ -11,12 +11,25 @@ from IPython.display import display
 # MathPlot: © Copyright 2002 - 2012 John Hunter, Darren Dale, Eric Firing, Michael Droettboom and the Matplotlib development team; 2012 - 2021 The Matplotlib development team.
 # For more insformation pls visit https://matplotlib.org/stable/api/index
 
+'''
+Use matplotlib imshow to plot the image data.
+
+args:
+data: a single image numpy array (for instance, [28,28] for a MNIST image)
+'''
 def plot_image(data):
     #fig = plt.figure(figsize=(15, 7))
     plt.title("Adversial examples")
     plt.imshow(data,cmap=plt.cm.gray, interpolation='nearest')
     plt.show() 
 
+    
+'''
+Use matplotlib imshow to plot the image data.
+
+args:
+data: image numpy array of multiple image (for instance,[100,28,28] for an MNIST image)
+'''    
 def plot_images(data):
     # plot the images: each image is 28x28 pixels
     # set up the figure
@@ -38,6 +51,13 @@ def plot_images(data):
         #ax.imshow(data[i].reshape((28,28)),cmap=plt.cm.gray_r, interpolation='nearest')
     plt.show()
 
+'''
+Plot the pandas dataframe with gradients. The dataframe here is the transferability data obtained from the experiments.
+For more details on background gradients please refer to pandas manual at: https://pandas.pydata.org/docs/reference/api/pandas.io.formats.style.Styler.background_gradient.html
+
+This example is referred from stackoverflow: https://stackoverflow.com/questions/38931566/pandas-style-background-gradient-both-rows-and-columns
+The function overrides pandas "background" function: https://github.com/pandas-dev/pandas/blob/29d81f3df81eb0a4d077ae1317df74d509cdc446/pandas/formats/style.py#L817
+'''
 def plot_data_points(data_frame):
     df = pd.DataFrame(data_frame)
     pd.set_option("display.precision", 3)
@@ -60,13 +80,17 @@ def plot_data_points(data_frame):
                 low=0,
                 high=0.2))
 
+'''    
+Display transferability matrix with average of the entire row at the end.
+This is a slight modification of the function "plot_data_points(dataframe)" of this class.
+'''   
 def plot_data_points_with_average(data_frame):
     df = pd.DataFrame(data_frame)
     pd.set_option("display.precision", 3)
     df.columns= ["Float", "1" ,"2", "4", "8", "12", "16", "Average"]
     df.index = ["Float", "1", "2", "4", "8", "12", "16"]
     #visualize_data.plotTable(df)
-    # generate some example data
+
     def background_gradient(s, m, M, cmap='PuBu', low=0, high=0):
         rng = M - m
         norm = colors.Normalize(m - (rng * low),
@@ -82,7 +106,10 @@ def plot_data_points_with_average(data_frame):
                 low=0,
                 high=0.2))
 
-
+'''
+Same as plot_data_points_with_average but to make the labels look good, rows and column label backgrounds are made a bit consistent in color.
+For more details and examples on this, please follow: https://pandas.pydata.org/docs/user_guide/style.html
+'''
 def plot_data_points_with_average_stylized(data_frame):
     df = pd.DataFrame(data_frame)
     pd.set_option("display.precision", 3)
