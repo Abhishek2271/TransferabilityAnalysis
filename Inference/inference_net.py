@@ -30,6 +30,8 @@ Cifar_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\CIFAR10"
 
 def get_prediction_config(saved_model, _model):
     """ Prediction config sets up all necessary configuration necessary for inference.
+    For more info on prediction config pls visit https://github.com/tensorpack/tensorpack/blob/master/examples/DoReFa-Net/alexnet-dorefa.py
+    The prediction config implemented here is re-implementation of how it is done in Tensorpack.
 
      It sets up:
 
