@@ -21,6 +21,15 @@ This module implements the Jacobian-based Saliency Map attack `SaliencyMapMethod
 
 There is no change in code here. Just some comments that could be helpful later if I forget why some steps were done!
 
+
+THIS CLASS IS A COPY OF ATTACK IMPLEMENTATION IN ART:
+https://github.com/Trusted-AI/adversarial-robustness-toolbox/blob/990236dfca56618f25ae1aa7e14fae2eef0892ac/art/attacks/evasion/saliency_map.py
+
+THIS IS ONLY HERE SO THAT IT IS COMMENTED WHEREEVER APPROPRIATE AND IS NOT USED IN THE PROJECT IN ANY WAY. IT IS HERE JUST FOR REFERENCE. 
+
+CREDITS TO ART DEVELOPERS:
+WHEN ART IS INSTALLED THIS FILE IS INSTALLED IN THE FOLLOWING LOCATION.
+
 """
 from __future__ import absolute_import, division, print_function, unicode_literals
 
