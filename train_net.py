@@ -20,6 +20,9 @@ Cifar_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\CIFAR10"
 
 def get_config_mnist(_model, data_train, data_test):
     """
+    Training configuration is as per the example provided in Tensorpack repo example for training MNIST data.
+    The model is available at: https://github.com/tensorpack/tensorpack/blob/master/examples/basics/mnist-convnet.py
+    
     Get training configuration for MNIST. The training configuraion basically includes:
 
         1. How many checkpoints to save 
