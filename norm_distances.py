@@ -7,7 +7,7 @@ Cifar_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\CIFAR10"
 
 
 '''
-Compute Lp distances between two images. 
+Compute Lp distances between two images (using Numpy: © Copyright 2008-2022, NumPy Developers). 
 
 Please refer to https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html
 
