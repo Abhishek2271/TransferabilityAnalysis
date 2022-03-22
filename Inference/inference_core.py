@@ -14,6 +14,15 @@ from DataSets.mnist import GetMnist
 import os
 import norm_distances as lpnorm
 
+'''
+Inference is done using Tensorpack built-in functions. A very good example for how inference is done is at: https://github.com/tensorpack/tensorpack/blob/master/examples/DoReFa-Net/alexnet-dorefa.py
+
+This file implements inference for single input. However, this is too slow. Batch inference is done to get past this. Which is finally how inference is done.
+
+Tensorpack is mainly for training so not so much customization in the way of inferencing though and thus a lot of the things done in this class are a bit manual.
+
+But is thoroughly tested over multiple models, especially the inference core and batch inference.
+'''
 def infer_model_dataset(predictorConfig, dataset=None, labels=None, index= None):
 
     """
