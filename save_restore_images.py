@@ -3,6 +3,9 @@ import cv2
 import os
 from tensorpack.dataflow.dataset.mnist import Mnist 
 
+# Numpy used for saving and restoring data. © Copyright 2008-2022, NumPy Developers.
+# All codes are based on examples from numpy manuals. https://numpy.org/doc/stable/
+
 '''
     The classes/ functions here are meant to load/ save images in numpy and png format as per requirement. There are different ways to save
         and restore images. Below are few that might be helpful. This class only implements:
