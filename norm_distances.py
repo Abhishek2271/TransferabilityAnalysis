@@ -5,6 +5,15 @@ import numpy as np
 Mnist_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\MNIST\Data"
 Cifar_Data_Dir = r"C:\Users\sab\Downloads\AI Testing\_Tools\DataSets\CIFAR10"
 
+
+'''
+Compute Lp distances between two images. 
+
+Please refer to https://numpy.org/doc/stable/reference/generated/numpy.linalg.norm.html
+
+for more info on how to compute these distances
+
+'''
 def get_lp_norm_distances(adversarial_images, image_index):
     """
     Get L2 and L_infinity distance between clean and adversarial images. Only the images which are successful are considered 
