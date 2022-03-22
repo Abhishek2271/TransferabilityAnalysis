@@ -12,7 +12,7 @@ from IPython.display import display
 # For more insformation pls visit https://matplotlib.org/stable/api/index
 
 '''
-Use matplotlib imshow to plot the image data.
+Use matplotlib imshow to plot a single image.
 
 args:
 data: a single image numpy array (for instance, [28,28] for a MNIST image)
@@ -26,7 +26,7 @@ def plot_image(data):
 
     
 '''
-Use matplotlib imshow to plot the image data.
+Use matplotlib imshow to plot multiple images.
 
 args:
 data: image numpy array of multiple image (for instance,[100,28,28] for an MNIST image)
