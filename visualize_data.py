@@ -16,6 +16,7 @@ Use matplotlib imshow to plot the image data.
 
 args:
 data: a single image numpy array (for instance, [28,28] for a MNIST image)
+for more details on image plots please follow the matplot lib guide: https://matplotlib.org/3.5.1/tutorials/introductory/images.html
 '''
 def plot_image(data):
     #fig = plt.figure(figsize=(15, 7))
