@@ -1,6 +1,6 @@
-# TransferabilityAnalysis
+# Advesarial Neural Network Toolbox
 
-The source code in the repository is a Python API that is able to fulfil a complete workflow of:
+The source code in the repository is a Python API that is able to fulfill a complete workflow of:
 1. Traning full-precision and quantized neural networks.
 2. Creating adversarial examples on these networks.
 3. Transfering adversarial examples from the network where samples are created (source) to another (target) network.
