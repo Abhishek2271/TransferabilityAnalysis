@@ -4,6 +4,7 @@ This tool was used to perform experiments for our paper "Properties that allow o
 
 All references and works used along with libraries are mentioned within this readme and also within codes. 
 
+--------------------------------------------------------
 The source code in the repository is a Python API that is able to fulfill a complete workflow of:
 1. Traning full-precision and quantized neural networks.
 2. Creating adversarial examples on these networks.
